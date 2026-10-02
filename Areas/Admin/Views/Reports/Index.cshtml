@@ -1,0 +1,49 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Reports";
+}
+<div class="admin-layout">
+    <partial name="../Shared/_AdminNav" />
+    <main class="admin-main">
+        <div class="admin-page-header">
+            <div>
+                <span class="admin-eyebrow">Analytics</span>
+                <h1>Sales reports</h1>
+                <p>Use sales and product movement reports to plan inventory decisions.</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <section class="admin-panel">
+                    <div class="panel-heading">
+                        <div><h2>Top selling products</h2><p>Ranked by quantity sold</p></div>
+                    </div>
+                    <table class="table admin-table">
+                        <tbody>
+                            @foreach (var product in Model.TopProducts)
+                            {
+                                <tr><td><strong>@product.Product</strong></td><td class="text-end">@product.Quantity sold</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+            <div class="col-lg-6">
+                <section class="admin-panel">
+                    <div class="panel-heading">
+                        <div><h2>Monthly revenue</h2><p>Non-cancelled order value</p></div>
+                    </div>
+                    <table class="table admin-table">
+                        <tbody>
+                            @foreach (var month in Model.MonthlySales)
+                            {
+                                <tr><td><strong>@month.Month</strong></td><td class="text-end">Rs @month.Revenue.ToString("N0")</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </div>
+    </main>
+</div>

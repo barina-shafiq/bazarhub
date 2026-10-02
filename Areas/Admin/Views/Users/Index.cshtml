@@ -1,0 +1,35 @@
+@model IReadOnlyList<ApplicationUser>
+@{
+    ViewData["Title"] = "Users";
+}
+<div class="admin-layout">
+    <partial name="../Shared/_AdminNav" />
+    <main class="admin-main">
+        <div class="admin-page-header">
+            <div>
+                <span class="admin-eyebrow">Customers</span>
+                <h1>Users</h1>
+                <p>Monitor registered customers and admin accounts.</p>
+            </div>
+        </div>
+
+        <section class="admin-panel">
+            <div class="table-responsive">
+                <table class="table admin-table align-middle">
+                    <thead><tr><th>Name</th><th>Email</th><th>Joined</th><th>Contact</th></tr></thead>
+                    <tbody>
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td><strong>@user.FullName</strong></td>
+                                <td>@user.Email</td>
+                                <td>@user.CreatedAt.ToLocalTime().ToString("dd MMM yyyy")</td>
+                                <td>@(string.IsNullOrWhiteSpace(user.PhoneNumber) ? "Not provided" : user.PhoneNumber)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>

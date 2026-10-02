@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - BazaarHub</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="storefront-body">
+    <header class="store-header sticky-top">
+        <div class="store-announcement">
+            <span>Free delivery on orders over Rs 15,000</span>
+            <span>Secure checkout</span>
+            <span>Fresh fashion drops added daily</span>
+        </div>
+        <nav class="navbar navbar-expand-lg store-nav">
+            <div class="container-fluid px-lg-4">
+                <a class="navbar-brand store-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <span class="brand-mark">B</span>
+                    <span>BazaarHub</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse gap-3" id="mainNav">
+                    <form class="store-search flex-grow-1" asp-area="" asp-controller="Products" asp-action="Index" method="get">
+                        <input class="form-control" name="Search" placeholder="Search fashion, electronics, home essentials" />
+                        <button class="btn btn-accent px-4" type="submit">Search</button>
+                    </form>
+                    <ul class="navbar-nav align-items-lg-center">
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Products" asp-action="Index">Products</a></li>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Wishlist" asp-action="Index">Wishlist</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Cart" asp-action="Index">Cart</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Orders" asp-action="Index">Orders</a></li>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item"><a class="nav-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a></li>
+                            }
+                            <li class="nav-item">
+                                <form asp-area="" asp-controller="Account" asp-action="Logout" method="post">
+                                    <button class="btn btn-sm btn-outline-store">Logout</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login">Login</a></li>
+                            <li class="nav-item"><a class="btn btn-sm btn-accent" asp-area="" asp-controller="Account" asp-action="Register">Register</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <partial name="_Toasts" />
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="store-footer">
+        <div class="container d-flex flex-wrap justify-content-between gap-3">
+            <div>
+                <strong>BazaarHub</strong>
+                <span>Modern marketplace for fashion, gadgets, and home essentials.</span>
+            </div>
+            <span>&copy; 2026 BazaarHub</span>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,79 @@
+@model ProductFormViewModel
+@{
+    ViewData["Title"] = "Product Form";
+}
+<div class="admin-layout">
+    <partial name="../Shared/_AdminNav" />
+    <main class="admin-main">
+        <div class="admin-page-header">
+            <div>
+                <span class="admin-eyebrow">Catalog</span>
+                <h1>@(Model.Id == 0 ? "Add product" : "Edit product")</h1>
+                <p>Keep listing content accurate, image-rich, and inventory-ready.</p>
+            </div>
+        </div>
+
+        <section class="admin-panel admin-form-panel">
+            <form method="post" enctype="multipart/form-data" class="row g-3">
+                <input type="hidden" asp-for="Id" />
+                <div class="col-md-6"><label class="form-label">Name</label><input class="form-control" asp-for="Name" /></div>
+                <div class="col-md-6"><label class="form-label">Brand</label><input class="form-control" asp-for="Brand" /></div>
+                <div class="col-md-4"><label class="form-label">Price</label><input class="form-control" asp-for="Price" /></div>
+                <div class="col-md-4"><label class="form-label">Discount price</label><input class="form-control" asp-for="DiscountPrice" /></div>
+                <div class="col-md-4"><label class="form-label">Stock</label><input class="form-control" asp-for="StockQuantity" /></div>
+                <div class="col-md-6">
+                    <label class="form-label">Category</label>
+                    <select class="form-select" asp-for="CategoryId">
+                        <option value="">Choose category</option>
+                        @foreach (var category in Model.Categories)
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-6"><label class="form-label">Images</label><input class="form-control" type="file" name="images" multiple /></div>
+                <div class="col-12"><label class="form-label">Description</label><textarea class="form-control" asp-for="Description" rows="5"></textarea></div>
+                <div class="col-12 d-flex flex-wrap gap-4">
+                    <label class="form-check"><input class="form-check-input" asp-for="IsFeatured" /> Featured product</label>
+                    <label class="form-check"><input class="form-check-input" asp-for="IsTrending" /> Trending product</label>
+                </div>
+                @if (Model.ExistingImages.Any())
+                {
+                    <div class="col-12">
+                        <label class="form-label">Current images</label>
+                        <div class="admin-image-strip">
+                            @foreach (var image in Model.ExistingImages)
+                            {
+                                <div class="admin-image-item">
+                                    <img src="@image.ImagePath" alt="@Model.Name" />
+                                    <div class="admin-image-actions">
+                                        @if (image.IsPrimary)
+                                        {
+                                            <span class="badge text-bg-dark">Primary</span>
+                                        }
+                                        <button type="submit"
+                                                class="btn btn-sm btn-outline-danger"
+                                                asp-area="Admin"
+                                                asp-controller="Products"
+                                                asp-action="DeleteImage"
+                                                asp-route-imageId="@image.Id"
+                                                asp-route-productId="@Model.Id"
+                                                formnovalidate
+                                                onclick="return confirm('Delete this image?');">
+                                            Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                <div class="col-12 d-flex gap-2">
+                    <button class="btn btn-warning">Save product</button>
+                    <a class="btn btn-outline-secondary" asp-action="Index">Cancel</a>
+                </div>
+            </form>
+        </section>
+    </main>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

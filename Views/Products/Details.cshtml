@@ -1,0 +1,74 @@
+@model ProductDetailsViewModel
+@{
+    ViewData["Title"] = Model.Product.Name;
+    var images = Model.Product.Images.Any() ? Model.Product.Images.ToList() : [new ProductImage { ImagePath = "/uploads/sample-product.svg" }];
+}
+
+<div class="container py-4">
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <img src="@images.First().ImagePath" class="details-image mb-3" alt="@Model.Product.Name" />
+            <div class="d-flex gap-2 flex-wrap">
+                @foreach (var image in images)
+                {
+                    <img src="@image.ImagePath" class="thumb-image" alt="@Model.Product.Name" />
+                }
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="text-muted">@Model.Product.Brand</div>
+            <h1 class="h2">@Model.Product.Name</h1>
+            <div class="text-warning mb-2">@Model.Product.AverageRating.ToString("0.0") ★ (@Model.Product.Reviews.Count reviews)</div>
+            <p>@Model.Product.Description</p>
+            <div class="display-6 text-danger fw-bold">Rs @Model.Product.EffectivePrice.ToString("N0")</div>
+            <div class="text-muted mb-3">Stock: @Model.Product.StockQuantity</div>
+            <div class="d-flex gap-2">
+                <form asp-controller="Cart" asp-action="Add" method="post" class="d-flex gap-2">
+                    <input type="hidden" name="productId" value="@Model.Product.Id" />
+                    <input class="form-control qty-input" name="quantity" type="number" value="1" min="1" />
+                    <button class="btn btn-warning px-4">Add to cart</button>
+                </form>
+                <form asp-controller="Wishlist" asp-action="Toggle" method="post">
+                    <input type="hidden" name="productId" value="@Model.Product.Id" />
+                    <button class="btn btn-outline-secondary">Wishlist</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <section class="mt-5">
+        <h2 class="h4">Reviews</h2>
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <form asp-action="Review" method="post" class="review-form mb-4">
+                <input type="hidden" name="productId" value="@Model.Product.Id" />
+                <select class="form-select mb-2" asp-for="Review.Rating">
+                    @for (var i = 5; i >= 1; i--)
+                    {
+                        <option value="@i">@i stars</option>
+                    }
+                </select>
+                <textarea class="form-control mb-2" asp-for="Review.Comment" placeholder="Write your review"></textarea>
+                <button class="btn btn-dark">Submit review</button>
+            </form>
+        }
+        @foreach (var review in Model.Product.Reviews.OrderByDescending(r => r.CreatedAt))
+        {
+            <div class="border-bottom py-3">
+                <strong>@(review.User?.FullName ?? "Customer")</strong>
+                <span class="text-warning">@review.Rating ★</span>
+                <p class="mb-0">@review.Comment</p>
+            </div>
+        }
+    </section>
+
+    <section class="mt-5">
+        <h2 class="h4 mb-3">Related products</h2>
+        <div class="row g-3">
+            @foreach (var product in Model.RelatedProducts)
+            {
+                <div class="col-6 col-md-3"><partial name="_ProductCard" model="product" /></div>
+            }
+        </div>
+    </section>
+</div>

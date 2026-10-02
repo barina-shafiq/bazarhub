@@ -1,0 +1,23 @@
+@{
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    string Active(string name) => string.Equals(controller, name, StringComparison.OrdinalIgnoreCase) ? "active" : "";
+}
+
+<aside class="admin-sidebar">
+    <div class="admin-brand">
+        <span class="admin-brand-mark">B</span>
+        <div>
+            <strong>BazaarHub</strong>
+            <small>Admin console</small>
+        </div>
+    </div>
+    <nav class="admin-nav">
+        <a class="@Active("Dashboard")" asp-area="Admin" asp-controller="Dashboard" asp-action="Index"><span>Dashboard</span></a>
+        <a class="@Active("Products")" asp-area="Admin" asp-controller="Products" asp-action="Index"><span>Products</span></a>
+        <a class="@Active("Categories")" asp-area="Admin" asp-controller="Categories" asp-action="Index"><span>Categories</span></a>
+        <a class="@Active("Orders")" asp-area="Admin" asp-controller="Orders" asp-action="Index"><span>Orders</span></a>
+        <a class="@Active("Users")" asp-area="Admin" asp-controller="Users" asp-action="Index"><span>Users</span></a>
+        <a class="@Active("Reports")" asp-area="Admin" asp-controller="Reports" asp-action="Index"><span>Reports</span></a>
+    </nav>
+    <a class="admin-store-link" asp-area="" asp-controller="Home" asp-action="Index">Back to store</a>
+</aside>

@@ -1,0 +1,140 @@
+﻿using System.ComponentModel.DataAnnotations;
+using WebProject.Models;
+
+namespace WebProject.ViewModels;
+
+public class HomeViewModel
+{
+    public IReadOnlyList<Category> Categories { get; set; } = [];
+    public IReadOnlyList<Product> FeaturedProducts { get; set; } = [];
+    public IReadOnlyList<Product> TrendingProducts { get; set; } = [];
+    public IReadOnlyList<Product> NewArrivals { get; set; } = [];
+    public IReadOnlyList<Product> RecommendedProducts { get; set; } = [];
+}
+
+public class ProductListViewModel
+{
+    public IReadOnlyList<Product> Products { get; set; } = [];
+    public IReadOnlyList<Category> Categories { get; set; } = [];
+    public string? Search { get; set; }
+    public int? CategoryId { get; set; }
+    public decimal? MinPrice { get; set; }
+    public decimal? MaxPrice { get; set; }
+    public string Sort { get; set; } = "newest";
+    public int Page { get; set; } = 1;
+    public int TotalPages { get; set; }
+}
+
+public class ProductDetailsViewModel
+{
+    public Product Product { get; set; } = new();
+    public IReadOnlyList<Product> RelatedProducts { get; set; } = [];
+    public ReviewInputModel Review { get; set; } = new();
+}
+
+public class ReviewInputModel
+{
+    [Range(1, 5)]
+    public int Rating { get; set; } = 5;
+
+    [Required, StringLength(800)]
+    public string Comment { get; set; } = string.Empty;
+}
+
+public class CartViewModel
+{
+    public IReadOnlyList<CartItem> Items { get; set; } = [];
+    public decimal Subtotal => Items.Sum(i => (i.Product?.EffectivePrice ?? 0) * i.Quantity);
+    public decimal ShippingFee => Subtotal > 0 && Subtotal < 15000 ? 350 : 0;
+    public decimal Total => Subtotal + ShippingFee;
+}
+
+public class CheckoutViewModel
+{
+    [Required, StringLength(100)]
+    public string FullName { get; set; } = string.Empty;
+
+    [Required, StringLength(30)]
+    public string Phone { get; set; } = string.Empty;
+
+    [Required, StringLength(120)]
+    public string City { get; set; } = string.Empty;
+
+    [Required, StringLength(250)]
+    public string StreetAddress { get; set; } = string.Empty;
+
+    public PaymentMethod PaymentMethod { get; set; } = PaymentMethod.CashOnDelivery;
+    public CartViewModel Cart { get; set; } = new();
+}
+
+public class RegisterViewModel
+{
+    [Required, StringLength(100)]
+    public string FullName { get; set; } = string.Empty;
+
+    [Required, EmailAddress]
+    public string Email { get; set; } = string.Empty;
+
+    [Required, DataType(DataType.Password), MinLength(6)]
+    public string Password { get; set; } = string.Empty;
+}
+
+public class LoginViewModel
+{
+    [Required, EmailAddress]
+    public string Email { get; set; } = string.Empty;
+
+    [Required, DataType(DataType.Password)]
+    public string Password { get; set; } = string.Empty;
+
+    public bool RememberMe { get; set; }
+}
+
+public class ProductFormViewModel
+{
+    public int Id { get; set; }
+
+    [Required, StringLength(160)]
+    public string Name { get; set; } = string.Empty;
+
+    [Required, StringLength(120)]
+    public string Brand { get; set; } = string.Empty;
+
+    [Required]
+    public string Description { get; set; } = string.Empty;
+
+    [Range(1, 999999)]
+    public decimal Price { get; set; }
+
+    [Range(0, 999999)]
+    public decimal? DiscountPrice { get; set; }
+
+    [Range(0, 100000)]
+    public int StockQuantity { get; set; }
+
+    public bool IsFeatured { get; set; }
+    public bool IsTrending { get; set; }
+
+    [Range(1, int.MaxValue, ErrorMessage = "Choose a category.")]
+    public int CategoryId { get; set; }
+
+    public IReadOnlyList<Category> Categories { get; set; } = [];
+    public IReadOnlyList<ProductImage> ExistingImages { get; set; } = [];
+}
+
+public class DashboardViewModel
+{
+    public int TotalProducts { get; set; }
+    public int TotalUsers { get; set; }
+    public int TotalOrders { get; set; }
+    public decimal Revenue { get; set; }
+    public IReadOnlyList<MonthlySalesPoint> MonthlySales { get; set; } = [];
+    public IReadOnlyList<TopProductPoint> TopProducts { get; set; } = [];
+    public IReadOnlyList<StatusPoint> OrdersByStatus { get; set; } = [];
+    public IReadOnlyList<Order> RecentOrders { get; set; } = [];
+    public IReadOnlyList<Product> LowStockProducts { get; set; } = [];
+}
+
+public record MonthlySalesPoint(string Month, decimal Revenue);
+public record TopProductPoint(string Product, int Quantity);
+public record StatusPoint(string Status, int Count);

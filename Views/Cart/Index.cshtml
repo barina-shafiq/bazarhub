@@ -1,0 +1,40 @@
+@model CartViewModel
+@{
+    ViewData["Title"] = "Cart";
+}
+<div class="container py-4">
+    <h1 class="h3 mb-4">Shopping cart</h1>
+    <div class="row g-4">
+        <div class="col-lg-8">
+            @foreach (var item in Model.Items)
+            {
+                <div class="cart-line">
+                    <img src="@(item.Product?.Images.FirstOrDefault()?.ImagePath ?? "/uploads/sample-product.svg")" alt="@item.Product?.Name" />
+                    <div class="flex-grow-1">
+                        <h2 class="h6">@item.Product?.Name</h2>
+                        <div class="text-danger fw-bold">Rs @item.Product?.EffectivePrice.ToString("N0")</div>
+                        <form asp-action="Update" method="post" class="d-flex gap-2 mt-2">
+                            <input type="hidden" name="productId" value="@item.ProductId" />
+                            <input class="form-control qty-input" type="number" name="quantity" min="0" value="@item.Quantity" />
+                            <button class="btn btn-outline-dark btn-sm">Update</button>
+                        </form>
+                    </div>
+                    <form asp-action="Remove" method="post">
+                        <input type="hidden" name="productId" value="@item.ProductId" />
+                        <button class="btn btn-link text-danger">Remove</button>
+                    </form>
+                </div>
+            }
+        </div>
+        <div class="col-lg-4">
+            <div class="summary-box">
+                <h2 class="h5">Order summary</h2>
+                <div class="d-flex justify-content-between"><span>Subtotal</span><strong>Rs @Model.Subtotal.ToString("N0")</strong></div>
+                <div class="d-flex justify-content-between"><span>Shipping</span><strong>Rs @Model.ShippingFee.ToString("N0")</strong></div>
+                <hr />
+                <div class="d-flex justify-content-between h5"><span>Total</span><strong>Rs @Model.Total.ToString("N0")</strong></div>
+                <a class="btn btn-warning w-100 mt-3 @(Model.Items.Count == 0 ? "disabled" : "")" asp-controller="Checkout" asp-action="Index">Checkout</a>
+            </div>
+        </div>
+    </div>
+</div>

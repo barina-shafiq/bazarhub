@@ -1,0 +1,5 @@
+C:\Users\Barina\Desktop\WebProject\WebProject\wwwroot\uploads\sample-earbuds.svg
+C:\Users\Barina\Desktop\WebProject\WebProject\wwwroot\uploads\sample-fashion.svg
+C:\Users\Barina\Desktop\WebProject\WebProject\wwwroot\uploads\sample-home.svg
+C:\Users\Barina\Desktop\WebProject\WebProject\wwwroot\uploads\sample-laptop.svg
+C:\Users\Barina\Desktop\WebProject\WebProject\wwwroot\uploads\sample-phone.svg

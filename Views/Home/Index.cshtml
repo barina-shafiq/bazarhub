@@ -1,0 +1,109 @@
+@model HomeViewModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<section class="hero-band">
+    <div class="container py-5">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-7">
+                <p class="hero-kicker mb-2">Curated deals, polished checkout</p>
+                <h1 class="display-5 fw-bold">Discover standout fashion, smart gadgets, and home essentials.</h1>
+                <p class="lead">A sleek shopping experience with trending picks, wishlists, quick carts, and smooth order tracking.</p>
+                <div class="hero-actions">
+                    <a class="btn btn-accent btn-lg" asp-controller="Products" asp-action="Index">Start shopping</a>
+                    <a class="btn btn-hero-ghost btn-lg" asp-controller="Products" asp-action="Index" asp-route-Sort="newest">New arrivals</a>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="hero-showcase">
+                    <span>500+ fashion products</span>
+                    <strong>Fresh catalog drops</strong>
+                    <small>Randomized prices, stock, images, and categories seeded from your CSV.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container store-section">
+    <div class="section-heading">
+        <div>
+            <span>Browse faster</span>
+            <h2>Shop by category</h2>
+        </div>
+    </div>
+    <div class="row g-3">
+        @foreach (var category in Model.Categories)
+        {
+            <div class="col-6 col-md-3">
+                <a class="category-tile" asp-controller="Products" asp-action="Index" asp-route-CategoryId="@category.Id">
+                    <span>@category.Name</span>
+                    <small>@category.Description</small>
+                </a>
+            </div>
+        }
+    </div>
+</section>
+
+<section class="container store-section">
+    <div class="section-heading">
+        <div>
+            <span>Editor picks</span>
+            <h2>Featured products</h2>
+        </div>
+        <a asp-controller="Products" asp-action="Index">View all</a>
+    </div>
+    <div class="row g-3">
+        @foreach (var product in Model.FeaturedProducts)
+        {
+            <div class="col-6 col-md-4 col-lg-3"><partial name="_ProductCard" model="product" /></div>
+        }
+    </div>
+</section>
+
+<section class="container store-section">
+    <div class="section-heading">
+        <div>
+            <span>Popular now</span>
+            <h2>Trending now</h2>
+        </div>
+    </div>
+    <div class="row g-3">
+        @foreach (var product in Model.TrendingProducts)
+        {
+            <div class="col-6 col-md-4 col-lg-3"><partial name="_ProductCard" model="product" /></div>
+        }
+    </div>
+</section>
+
+<section class="container store-section">
+    <div class="section-heading">
+        <div>
+            <span>Just added</span>
+            <h2>New arrivals</h2>
+        </div>
+        <a asp-controller="Products" asp-action="Index" asp-route-Sort="newest">View all</a>
+    </div>
+    <div class="row g-3">
+        @foreach (var product in Model.NewArrivals)
+        {
+            <div class="col-6 col-md-4 col-lg-3"><partial name="_ProductCard" model="product" /></div>
+        }
+    </div>
+</section>
+
+<section class="container store-section">
+    <div class="section-heading">
+        <div>
+            <span>Personal picks</span>
+            <h2>Recommended for you</h2>
+        </div>
+    </div>
+    <div class="row g-3">
+        @foreach (var product in Model.RecommendedProducts)
+        {
+            <div class="col-6 col-md-4 col-lg-3"><partial name="_ProductCard" model="product" /></div>
+        }
+    </div>
+</section>

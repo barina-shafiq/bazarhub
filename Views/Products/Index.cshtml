@@ -1,0 +1,67 @@
+@model ProductListViewModel
+@{
+    ViewData["Title"] = "Products";
+}
+
+<div class="container product-shell">
+    <div class="row g-4">
+        <aside class="col-lg-3">
+            <form class="filter-panel" method="get">
+                <h1 class="h5">Filters</h1>
+                <label class="form-label">Search</label>
+                <input class="form-control mb-3" asp-for="Search" />
+                <label class="form-label">Category</label>
+                <select class="form-select mb-3" asp-for="CategoryId">
+                    <option value="">All categories</option>
+                    @foreach (var category in Model.Categories)
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+                </select>
+                <div class="row g-2">
+                    <div class="col">
+                        <label class="form-label">Min</label>
+                        <input class="form-control" asp-for="MinPrice" />
+                    </div>
+                    <div class="col">
+                        <label class="form-label">Max</label>
+                        <input class="form-control" asp-for="MaxPrice" />
+                    </div>
+                </div>
+                <label class="form-label mt-3">Sort</label>
+                <select class="form-select mb-3" asp-for="Sort">
+                    <option value="featured">Featured</option>
+                    <option value="newest">Newest</option>
+                    <option value="price_asc">Price low to high</option>
+                    <option value="price_desc">Price high to low</option>
+                </select>
+                <button class="btn btn-warning w-100">Apply filters</button>
+            </form>
+        </aside>
+        <section class="col-lg-9">
+            <div class="listing-heading">
+                <div>
+                    <span>Marketplace</span>
+                    <h1>Product listing</h1>
+                </div>
+                <span class="text-muted small">Page @Model.Page of @(Math.Max(1, Model.TotalPages))</span>
+            </div>
+            <div class="row g-3">
+                @foreach (var product in Model.Products)
+                {
+                    <div class="col-6 col-md-4"><partial name="_ProductCard" model="product" /></div>
+                }
+            </div>
+            <nav class="mt-4">
+                <ul class="pagination">
+                    @for (var i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.Page ? "active" : "")">
+                            <a class="page-link" asp-route-Page="@i" asp-route-Search="@Model.Search" asp-route-CategoryId="@Model.CategoryId" asp-route-MinPrice="@Model.MinPrice" asp-route-MaxPrice="@Model.MaxPrice" asp-route-Sort="@Model.Sort">@i</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </section>
+    </div>
+</div>

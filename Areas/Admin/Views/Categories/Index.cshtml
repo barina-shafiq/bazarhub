@@ -1,0 +1,37 @@
+@model IReadOnlyList<Category>
+@{
+    ViewData["Title"] = "Categories";
+}
+<div class="admin-layout">
+    <partial name="../Shared/_AdminNav" />
+    <main class="admin-main">
+        <div class="admin-page-header">
+            <div>
+                <span class="admin-eyebrow">Catalog</span>
+                <h1>Categories</h1>
+                <p>Group products into storefront sections for faster browsing and filtering.</p>
+            </div>
+            <a class="btn btn-warning" asp-action="Create">Add category</a>
+        </div>
+
+        <section class="admin-panel">
+            <div class="table-responsive">
+                <table class="table admin-table align-middle">
+                    <thead><tr><th>Name</th><th>Description</th><th>Products</th><th>Status</th><th></th></tr></thead>
+                    <tbody>
+                        @foreach (var category in Model)
+                        {
+                            <tr>
+                                <td><strong>@category.Name</strong></td>
+                                <td class="text-muted">@category.Description</td>
+                                <td>@category.Products.Count</td>
+                                <td><span class="status-pill @(category.IsActive ? "delivered" : "muted")">@(category.IsActive ? "Active" : "Hidden")</span></td>
+                                <td class="text-end"><a class="btn btn-sm btn-outline-dark" asp-action="Edit" asp-route-id="@category.Id">Edit</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>

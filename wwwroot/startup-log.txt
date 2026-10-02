@@ -1,0 +1,11 @@
+[Startup Log - 2026-05-30 11:11:00 UTC]
+Environment: Development
+ContentRootPath: C:\Users\Barina\Desktop\WebProject\WebProject
+BaseDirectory: C:\Users\Barina\Desktop\WebProject\WebProject\bin\Release\net10.0\
+Connection String: Server=(localdb)\MSSQLLocalDB;Database=BazaarHubDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True
+AutoMigrateDatabase is disabled.
+SeedAdminOnStartup is enabled. Seeding admin...
+Admin user and roles verified/seeded successfully.
+SeedFashionOnStartup is enabled. Resolving fashion.csv...
+fashion.csv resolved to 'C:\Users\Barina\Desktop\WebProject\WebProject\fashion.csv'. Starting import...
+Fashion seeding complete. Seeded 500 new products.

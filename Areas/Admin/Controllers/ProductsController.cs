@@ -1,0 +1,51 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using WebProject.Interfaces;
+using WebProject.ViewModels;
+
+namespace WebProject.Areas.Admin.Controllers;
+
+[Area("Admin")]
+[Authorize(Roles = "Admin")]
+public class ProductsController(IProductService productService) : Controller
+{
+    public async Task<IActionResult> Index(ProductListViewModel filters)
+    {
+        filters.PageSize = int.MaxValue;
+        return View(await productService.SearchAsync(filters));
+    }
+
+    public async Task<IActionResult> Create() => View("Edit", await productService.BuildFormAsync());
+
+    public async Task<IActionResult> Edit(int id) => View(await productService.BuildFormAsync(id));
+
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(ProductFormViewModel model, List<IFormFile> images)
+    {
+        if (!ModelState.IsValid)
+        {
+            model.Categories = await productService.GetCategoriesAsync();
+            return View(model);
+        }
+
+        await productService.SaveProductAsync(model, images);
+        TempData["Success"] = "Product saved.";
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Delete(int id)
+    {
+        await productService.DeleteProductAsync(id);
+        TempData["Success"] = "Product deleted.";
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteImage(int imageId, int productId)
+    {
+        await productService.DeleteImageAsync(imageId);
+        TempData["Success"] = "Image deleted.";
+        return RedirectToAction(nameof(Edit), new { id = productId });
+    }
+}

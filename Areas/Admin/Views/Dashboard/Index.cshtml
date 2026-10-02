@@ -1,0 +1,157 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="admin-layout admin-dashboard">
+    <partial name="../Shared/_AdminNav" />
+    <main class="admin-main">
+        <section class="admin-hero">
+            <div>
+                <span class="admin-eyebrow">Command center</span>
+                <h1>Sales Dashboard</h1>
+                <p>Monitor revenue, orders, stock risk, and customer activity from a single operations screen.</p>
+            </div>
+            <div class="admin-hero-actions">
+                <a class="btn btn-light" asp-area="" asp-controller="Home" asp-action="Index">View store</a>
+                <a class="btn btn-warning" asp-area="Admin" asp-controller="Products" asp-action="Create">Add product</a>
+            </div>
+        </section>
+
+        <section class="admin-metrics">
+            <article class="metric metric-blue">
+                <span>Revenue</span>
+                <strong>Rs @Model.Revenue.ToString("N0")</strong>
+                <small>Non-cancelled sales</small>
+            </article>
+            <article class="metric metric-green">
+                <span>Orders</span>
+                <strong>@Model.TotalOrders</strong>
+                <small>Across all statuses</small>
+            </article>
+            <article class="metric metric-amber">
+                <span>Products</span>
+                <strong>@Model.TotalProducts</strong>
+                <small>Catalog listings</small>
+            </article>
+            <article class="metric metric-red">
+                <span>Users</span>
+                <strong>@Model.TotalUsers</strong>
+                <small>Registered accounts</small>
+            </article>
+        </section>
+
+        <section class="dashboard-grid">
+            <article class="admin-panel chart-panel revenue-panel">
+                <div class="panel-heading">
+                    <div>
+                        <h2>Revenue trend</h2>
+                        <p>Last six months</p>
+                    </div>
+                    <span class="status-pill featured">Live</span>
+                </div>
+                <div class="chart-wrap">
+                    <canvas id="salesChart" width="900" height="360"></canvas>
+                </div>
+            </article>
+
+            <article class="admin-panel chart-panel">
+                <div class="panel-heading">
+                    <div>
+                        <h2>Order status</h2>
+                        <p>Fulfillment mix</p>
+                    </div>
+                </div>
+                <div class="chart-wrap donut-wrap">
+                    <canvas id="statusChart" width="420" height="320"></canvas>
+                </div>
+            </article>
+
+            <article class="admin-panel">
+                <div class="panel-heading">
+                    <div>
+                        <h2>Top products</h2>
+                        <p>Sales quantity, or featured products before orders</p>
+                    </div>
+                </div>
+                <div class="rank-list">
+                    @for (var i = 0; i < Model.TopProducts.Count; i++)
+                    {
+                        <div class="rank-row">
+                            <span class="rank-number">@(i + 1)</span>
+                            <strong>@Model.TopProducts[i].Product</strong>
+                            <small>@Model.TopProducts[i].Quantity sold</small>
+                        </div>
+                    }
+                </div>
+            </article>
+
+            <article class="admin-panel">
+                <div class="panel-heading">
+                    <div>
+                        <h2>Low stock watch</h2>
+                        <p>Inventory that needs attention</p>
+                    </div>
+                    <a asp-area="Admin" asp-controller="Products" asp-action="Index">Manage</a>
+                </div>
+                <div class="stock-list">
+                    @foreach (var product in Model.LowStockProducts)
+                    {
+                        <div class="stock-row">
+                            <img src="@(product.Images.FirstOrDefault()?.ImagePath ?? "/uploads/sample-product.svg")" alt="@product.Name" />
+                            <div>
+                                <strong>@product.Name</strong>
+                                <small>@product.Brand</small>
+                            </div>
+                            <span class="stock-pill @(product.StockQuantity < 10 ? "low" : "")">@product.StockQuantity left</span>
+                        </div>
+                    }
+                </div>
+            </article>
+        </section>
+
+        <section class="admin-panel mt-4">
+            <div class="panel-heading">
+                <div>
+                    <h2>Recent orders</h2>
+                    <p>Latest customer checkout activity</p>
+                </div>
+                <a asp-area="Admin" asp-controller="Orders" asp-action="Index">View all</a>
+            </div>
+            @if (Model.RecentOrders.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table admin-table align-middle">
+                        <thead><tr><th>Order</th><th>Customer</th><th>Status</th><th>Payment</th><th>Total</th></tr></thead>
+                        <tbody>
+                            @foreach (var order in Model.RecentOrders)
+                            {
+                                <tr>
+                                    <td><strong>@order.OrderNumber</strong><small class="d-block text-muted">@order.OrderedAt.ToLocalTime().ToString("dd MMM yyyy")</small></td>
+                                    <td>@order.User?.Email</td>
+                                    <td><span class="status-pill @order.Status.ToString().ToLowerInvariant()">@order.Status</span></td>
+                                    <td>@order.Payment?.Method</td>
+                                    <td><strong>Rs @order.TotalAmount.ToString("N0")</strong></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <strong>No orders yet</strong>
+                    <span>Place a demo checkout from the storefront to see live order activity here.</span>
+                </div>
+            }
+        </section>
+    </main>
+</div>
+
+<script type="application/json" id="salesChartData">
+@Json.Serialize(Model.MonthlySales)
+</script>
+<script type="application/json" id="statusChartData">
+@Json.Serialize(Model.OrdersByStatus)
+</script>

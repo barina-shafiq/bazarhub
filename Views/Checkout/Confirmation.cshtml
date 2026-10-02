@@ -1,0 +1,12 @@
+@model Order
+@{
+    ViewData["Title"] = "Order confirmed";
+}
+<div class="container py-5">
+    <div class="confirmation-box">
+        <h1 class="h3">Order confirmed</h1>
+        <p>Your order <strong>@Model.OrderNumber</strong> has been placed successfully.</p>
+        <p>Payment: @Model.Payment?.Method (@Model.Payment?.Status) | Transaction: @Model.Payment?.TransactionId</p>
+        <a class="btn btn-warning" asp-controller="Orders" asp-action="Details" asp-route-id="@Model.Id">View order</a>
+    </div>
+</div>

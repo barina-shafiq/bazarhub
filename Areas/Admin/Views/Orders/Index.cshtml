@@ -1,0 +1,38 @@
+@model IReadOnlyList<Order>
+@{
+    ViewData["Title"] = "Orders";
+}
+<div class="admin-layout">
+    <partial name="../Shared/_AdminNav" />
+    <main class="admin-main">
+        <div class="admin-page-header">
+            <div>
+                <span class="admin-eyebrow">Fulfillment</span>
+                <h1>Orders</h1>
+                <p>Review payments, shipping details, and update delivery progress.</p>
+            </div>
+        </div>
+
+        <section class="admin-panel">
+            <div class="table-responsive">
+                <table class="table admin-table align-middle">
+                    <thead><tr><th>Order</th><th>Customer</th><th>Status</th><th>Payment</th><th>Total</th><th></th></tr></thead>
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            var statusClass = order.Status.ToString().ToLowerInvariant();
+                            <tr>
+                                <td><strong>@order.OrderNumber</strong><small class="d-block text-muted">@order.OrderedAt.ToLocalTime().ToString("dd MMM yyyy")</small></td>
+                                <td>@order.User?.Email</td>
+                                <td><span class="status-pill @statusClass">@order.Status</span></td>
+                                <td>@order.Payment?.Method<br /><small class="text-muted">@order.Payment?.Status</small></td>
+                                <td><strong>Rs @order.TotalAmount.ToString("N0")</strong></td>
+                                <td class="text-end"><a class="btn btn-sm btn-outline-dark" asp-action="Details" asp-route-id="@order.Id">Manage</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>

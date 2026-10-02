@@ -1,0 +1,35 @@
+@model Category
+@{
+    ViewData["Title"] = "Category";
+}
+<div class="admin-layout">
+    <partial name="../Shared/_AdminNav" />
+    <main class="admin-main">
+        <div class="admin-page-header">
+            <div>
+                <span class="admin-eyebrow">Catalog</span>
+                <h1>@(Model.Id == 0 ? "Add category" : "Edit category")</h1>
+                <p>Keep category names short and useful for filtering.</p>
+            </div>
+        </div>
+
+        <section class="admin-panel admin-form-panel">
+            <form method="post">
+                <input type="hidden" asp-for="Id" />
+                <div class="mb-3">
+                    <label class="form-label">Name</label>
+                    <input class="form-control" asp-for="Name" placeholder="Category name" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" asp-for="Description" rows="4" placeholder="Short category description"></textarea>
+                </div>
+                <label class="form-check mb-4"><input class="form-check-input" asp-for="IsActive" /> Active on storefront</label>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-warning">Save category</button>
+                    <a class="btn btn-outline-secondary" asp-action="Index">Cancel</a>
+                </div>
+            </form>
+        </section>
+    </main>
+</div>

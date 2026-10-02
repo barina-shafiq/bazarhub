@@ -1,0 +1,24 @@
+@model IReadOnlyList<Order>
+@{
+    ViewData["Title"] = "Orders";
+}
+<div class="container py-4">
+    <h1 class="h3 mb-4">Order history</h1>
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead><tr><th>Order</th><th>Date</th><th>Status</th><th>Total</th><th></th></tr></thead>
+            <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td>@order.OrderNumber</td>
+                        <td>@order.OrderedAt.ToLocalTime().ToString("dd MMM yyyy")</td>
+                        <td><span class="badge text-bg-secondary">@order.Status</span></td>
+                        <td>Rs @order.TotalAmount.ToString("N0")</td>
+                        <td><a asp-action="Details" asp-route-id="@order.Id">Details</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,16 @@
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+}
+<div class="auth-wrap">
+    <form method="post" class="auth-card">
+        <h1 class="h3 mb-3">Create account</h1>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input class="form-control mb-3" asp-for="FullName" placeholder="Full name" />
+        <input class="form-control mb-3" asp-for="Email" placeholder="Email" />
+        <input class="form-control mb-3" asp-for="Password" placeholder="Password" />
+        <button class="btn btn-warning w-100">Register</button>
+        <a class="d-block mt-3" asp-action="Login">Already have an account?</a>
+    </form>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

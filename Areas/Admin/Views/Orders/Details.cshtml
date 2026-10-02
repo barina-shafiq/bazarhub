@@ -1,0 +1,41 @@
+@model Order
+@{
+    ViewData["Title"] = "Order details";
+}
+<div class="admin-layout">
+    <partial name="../Shared/_AdminNav" />
+    <main class="admin-main">
+        <div class="admin-page-header">
+            <div>
+                <span class="admin-eyebrow">Fulfillment</span>
+                <h1>@Model.OrderNumber</h1>
+                <p>@Model.User?.Email | Rs @Model.TotalAmount.ToString("N0") | @Model.Payment?.Method</p>
+            </div>
+        </div>
+
+        <section class="admin-panel admin-form-panel mb-4">
+            <form asp-action="UpdateStatus" method="post" class="admin-status-form">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <div>
+                    <label class="form-label">Order status</label>
+                    <select class="form-select" name="status" asp-items="Html.GetEnumSelectList<OrderStatus>()"></select>
+                </div>
+                <button class="btn btn-warning">Update status</button>
+            </form>
+        </section>
+
+        <section class="admin-panel">
+            <div class="table-responsive">
+                <table class="table admin-table align-middle">
+                    <thead><tr><th>Product</th><th>Qty</th><th>Unit</th><th>Total</th></tr></thead>
+                    <tbody>
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr><td><strong>@item.ProductName</strong></td><td>@item.Quantity</td><td>Rs @item.UnitPrice.ToString("N0")</td><td><strong>Rs @item.LineTotal.ToString("N0")</strong></td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>

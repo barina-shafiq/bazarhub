@@ -1,0 +1,64 @@
+@model ProductListViewModel
+@{
+    ViewData["Title"] = "Manage Products";
+}
+<div class="admin-layout">
+    <partial name="../Shared/_AdminNav" />
+    <main class="admin-main">
+        <div class="admin-page-header">
+            <div>
+                <span class="admin-eyebrow">Catalog</span>
+                <h1>Products</h1>
+                <p>Manage product listings, pricing, flags, and inventory levels.</p>
+            </div>
+            <a class="btn btn-warning" asp-action="Create">Add product</a>
+        </div>
+
+        <section class="admin-panel">
+            <div class="panel-heading">
+                <div>
+                    <h2>Product inventory</h2>
+                    <p>@Model.Products.Count products shown</p>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table admin-table align-middle">
+                    <thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th></th></tr></thead>
+                    <tbody>
+                        @foreach (var product in Model.Products)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="admin-product-cell">
+                                        <img src="@(product.Images.FirstOrDefault()?.ImagePath ?? "/uploads/sample-product.svg")" alt="@product.Name" />
+                                        <div><strong>@product.Name</strong><small>@product.Brand</small></div>
+                                    </div>
+                                </td>
+                                <td>@product.Category?.Name</td>
+                                <td><strong>Rs @product.EffectivePrice.ToString("N0")</strong></td>
+                                <td><span class="stock-pill @(product.StockQuantity < 10 ? "low" : "")">@product.StockQuantity</span></td>
+                                <td>
+                                    @if (product.IsFeatured)
+                                    {
+                                        <span class="status-pill featured">Featured</span>
+                                    }
+                                    @if (product.IsTrending)
+                                    {
+                                        <span class="status-pill trending">Trending</span>
+                                    }
+                                </td>
+                                <td class="text-end">
+                                    <a class="btn btn-sm btn-outline-dark" asp-action="Edit" asp-route-id="@product.Id">Edit</a>
+                                    <form asp-action="Delete" method="post" class="d-inline">
+                                        <input type="hidden" name="id" value="@product.Id" />
+                                        <button class="btn btn-sm btn-outline-danger">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>

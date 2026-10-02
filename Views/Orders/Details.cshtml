@@ -1,0 +1,19 @@
+@model Order
+@{
+    ViewData["Title"] = "Order details";
+}
+<div class="container py-4">
+    <h1 class="h3">@Model.OrderNumber</h1>
+    <p class="text-muted">Status: @Model.Status | Payment: @Model.Payment?.Method (@Model.Payment?.Status)</p>
+    <div class="table-responsive">
+        <table class="table">
+            <thead><tr><th>Product</th><th>Qty</th><th>Unit</th><th>Total</th></tr></thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr><td>@item.ProductName</td><td>@item.Quantity</td><td>Rs @item.UnitPrice.ToString("N0")</td><td>Rs @item.LineTotal.ToString("N0")</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
